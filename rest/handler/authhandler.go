@@ -100,7 +100,9 @@ func WithUnauthorizedCallback(callback UnauthorizedCallback) AuthorizeOption {
 
 func detailAuthLog(r *http.Request, reason string) {
 	// discard dump error, only for debug purpose
-	details, _ := httputil.DumpRequest(r, true)
+	//details, _ := httputil.DumpRequest(r, true)
+	// DumpRequest(第二个body参数改成false)，防止上传文件失败时将文件内容写入日志
+	details, _ := httputil.DumpRequest(r, false)
 	logx.Errorf("authorize failed: %s\n=> %+v", reason, string(details))
 }
 
