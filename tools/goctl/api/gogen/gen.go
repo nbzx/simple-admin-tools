@@ -26,6 +26,8 @@ import (
 	"github.com/zeromicro/go-zero/tools/goctl/api/parser"
 	apiutil "github.com/zeromicro/go-zero/tools/goctl/api/util"
 	"github.com/zeromicro/go-zero/tools/goctl/config"
+	"github.com/zeromicro/go-zero/tools/goctl/internal/cobrax"
+	"github.com/zeromicro/go-zero/tools/goctl/migrate"
 	"github.com/zeromicro/go-zero/tools/goctl/pkg/golang"
 	"github.com/zeromicro/go-zero/tools/goctl/rpc/execx"
 	"github.com/zeromicro/go-zero/tools/goctl/util"
@@ -245,8 +247,15 @@ func DoGenProject(apiFile, dir, style string, g *GenContext) error {
 	}
 
 	if g.GoZeroVersion != "" && g.ToolVersion != "" {
-		_, err := execx.Run(fmt.Sprintf("goctls migrate --zero_version %s --tool_version %s", g.GoZeroVersion, g.ToolVersion),
-			dir)
+		// _, err := execx.Run(fmt.Sprintf("goctls migrate --zero_version %s --tool_version %s", g.GoZeroVersion, g.ToolVersion),
+		// 	dir)
+		goctl := cobrax.NewCommand("goctl")
+		goctl.AddCommand(migrate.Cmd)
+		//内部执行migrate，便于debug调试
+		goctl.SetArgs([]string{"migrate", "--zero_version=" + g.GoZeroVersion, "--tool_version=" + g.ToolVersion})
+		os.Chdir(dir)
+		err := goctl.Execute()
+
 		if err != nil {
 			return err
 		}
