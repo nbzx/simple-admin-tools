@@ -59,7 +59,7 @@ gen-api: # Generate API files | 生成 API 的代码
 {{if .useEnt}}
 .PHONY: gen-ent
 gen-ent: # Generate Ent codes | 生成 Ent 的代码
-	go run -mod=mod entgo.io/ent/cmd/ent generate --template glob="./ent/template/*.tmpl" ./ent/schema
+	go run entgo.io/ent/cmd/ent generate --template glob="./ent/template/*.tmpl" ./ent/schema
 	@echo "Generate Ent successfully"
 
 .PHONY: gen-api-ent-logic

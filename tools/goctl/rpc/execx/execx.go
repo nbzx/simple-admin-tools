@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"errors"
 	"fmt"
+	"os"
 	"os/exec"
 	"runtime"
 	"strings"
@@ -39,6 +40,9 @@ func Run(arg, dir string, in ...*bytes.Buffer) (string, error) {
 	}
 	cmd.Stdout = stdout
 	cmd.Stderr = stderr
+	// 添加GOWORK环境变量，为了兼容go workspace
+	env := append(os.Environ(), "GOWORK=off")
+	cmd.Env = env
 	err := cmd.Run()
 	if err != nil {
 		if stderr.Len() > 0 {
